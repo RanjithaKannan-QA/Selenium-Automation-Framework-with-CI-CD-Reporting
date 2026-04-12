@@ -3,6 +3,7 @@ package Tests;
 import Base.BaseTest;
 import Pages.*;
 import Utilities.ConfigReader;
+import Utilities.DataProviderUtils;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -12,10 +13,11 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class YourCartPageTest extends BaseTest {
     protected Logger log = getLogger(this.getClass());
 
-    @Test
-    public void testCheckOut(){
+    @Test(dataProvider = "loginData" , dataProviderClass = DataProviderUtils.class)
+    public void testCheckOut(String username, String password)
+    {
         LoginPage loginPage= new LoginPage(driver,timeout);
-        HomePage homePage = loginPage.performLogin(ConfigReader.getProperty("username"), ConfigReader.getProperty("password"));
+        HomePage homePage = loginPage.performLogin(username, password);
         log.info("Verifying HomePage is loaded after login");
         Assert.assertTrue(homePage.isHomePageLoaded(),"Login failed: URL did not contain 'inventory'");
 

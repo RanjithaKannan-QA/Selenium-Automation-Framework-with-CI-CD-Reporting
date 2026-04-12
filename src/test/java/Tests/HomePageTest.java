@@ -4,16 +4,18 @@ import Base.BaseTest;
 import Pages.HomePage;
 import Pages.LoginPage;
 import Pages.YourCartPage;
-import Utilities.ConfigReader;
+import Utilities.DataProviderUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HomePageTest extends BaseTest {
 
-@Test
-    public void testAddProductsToCart() {
+
+@Test(dataProvider = "loginData", dataProviderClass = DataProviderUtils.class)
+    public void testAddProductsToCart(String username, String password)
+    {
         LoginPage loginPage = new LoginPage(driver, timeout);
-        HomePage homePage = loginPage.performLogin(ConfigReader.getProperty("username") , ConfigReader.getProperty("password"));
+        HomePage homePage = loginPage.performLogin(username , password);
         Assert.assertTrue(homePage.isHomePageLoaded(), "Login failed: URL did not contain 'inventory'");
 
         homePage.addProductToCart();
