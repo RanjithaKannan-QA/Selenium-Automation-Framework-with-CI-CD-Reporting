@@ -2,7 +2,6 @@ package Tests;
 
 import Base.BaseTest;
 import Pages.*;
-import Utilities.ConfigReader;
 import Utilities.DataProviderUtils;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;

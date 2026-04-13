@@ -15,19 +15,29 @@ public class DriverFactory {
     public static WebDriver initializeDriver(String browser) {
         WebDriver driver;
 
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--disable-notifications");
-        chromeOptions.addArguments("--disable-extensions");
-        chromeOptions.addArguments("--incognito");
+        if (browser.equalsIgnoreCase("Chrome"))
+        {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.addArguments("--disable-notifications");
+            chromeOptions.addArguments("--disable-extensions");
+            chromeOptions.addArguments("--incognito");
 
-        Map<String , Object> prefs = new HashMap<>();
-        prefs.put("credentials_enable_service", false);
-        prefs.put("profile.password_manager_enabled", false);
-        prefs.put("profile.password_manager_leak_detection", false);
-        chromeOptions.setExperimentalOption("prefs", prefs);
+            Map<String , Object> prefs = new HashMap<>();
+            prefs.put("credentials_enable_service", false);
+            prefs.put("profile.password_manager_enabled", false);
+            prefs.put("profile.password_manager_leak_detection", false);
+            chromeOptions.setExperimentalOption("prefs", prefs);
 
-        if (browser.equalsIgnoreCase("Chrome")) {
+            boolean isCI = "true".equalsIgnoreCase(System.getenv("CI"));
+            if(isCI){
+                chromeOptions.addArguments("--headless=new");
+                chromeOptions.addArguments("--no-sandbox");
+                chromeOptions.addArguments("--disable-dev-shm-usage");
+                chromeOptions.addArguments("--window-size=1920,1080");
+            }
+
             driver = new ChromeDriver(chromeOptions);
+
         } else if (browser.equalsIgnoreCase("Edge")) {
             driver = new EdgeDriver();
         } else if (browser.equalsIgnoreCase("Firefox")) {

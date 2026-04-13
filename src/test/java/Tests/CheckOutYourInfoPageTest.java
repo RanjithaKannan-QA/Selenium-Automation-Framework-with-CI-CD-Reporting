@@ -2,21 +2,18 @@ package Tests;
 
 import Base.BaseTest;
 import Pages.*;
-import Utilities.ConfigReader;
 import Utilities.DataProviderUtils;
-import Utilities.ExcelUtils;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import java.io.IOException;
+
 
 public class CheckOutYourInfoPageTest extends BaseTest {
 
     @Test(dataProvider = "checkoutData" , dataProviderClass = DataProviderUtils.class)
-    public void testUpdateInformation(String firstName, String lastName, String postalCode){
+    public void testUpdateInformation(String username, String password ,String firstName, String lastName, String postalCode){
 
         LoginPage loginPage= new LoginPage(driver,timeout);
-        HomePage homePage = loginPage.performLogin(ConfigReader.getProperty("username"), ConfigReader.getProperty("password"));
+        HomePage homePage = loginPage.performLogin(username, password);
         log.info("Verifying HomePage is loaded after login");
         Assert.assertTrue(homePage.isHomePageLoaded(),"Login failed: URL did not contain 'inventory'");
 
