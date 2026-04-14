@@ -11,9 +11,10 @@ import java.util.Map;
 
 public class DriverFactory {
 
+   private static WebDriver driver;
 
     public static WebDriver initializeDriver(String browser) {
-        WebDriver driver;
+
 
         if (browser.equalsIgnoreCase("Chrome"))
         {
@@ -46,5 +47,10 @@ public class DriverFactory {
             throw new RuntimeException("Unsupported Browser : " + browser);
         }
         return driver;
+    }
+
+    public static WebDriver getDriver() {
+
+            return driver;
     }
 }
