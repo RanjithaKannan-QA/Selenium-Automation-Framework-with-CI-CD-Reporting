@@ -4,9 +4,13 @@ import Base.BaseTest;
 import Pages.HomePage;
 import Pages.LoginPage;
 import Utilities.DataProviderUtils;
+import Utilities.TestListener;
+import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.testng.Assert;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+@Listeners(TestListener.class)
 public class LoginTest extends BaseTest {
 
 
