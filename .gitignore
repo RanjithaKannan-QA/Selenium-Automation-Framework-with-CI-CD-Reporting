@@ -11,6 +11,7 @@ target/
 *.log
 *.iml
 screenshots/
+reports/
 
 ### Eclipse ###
 .apt_generated
