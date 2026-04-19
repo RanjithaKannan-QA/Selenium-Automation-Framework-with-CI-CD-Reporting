@@ -24,7 +24,7 @@ public class TestListener implements ITestListener {
     private static Logger log = Log.getLogger(TestListener.class);
 
     public void onStart(ITestContext context) {
-      System.out.println("Execution Started Successfully");
+      System.out.println("Test Execution Started Successfully");
        log.info("=========Test Execution Started :" + context.getName() + "=========");
     }
 
@@ -58,6 +58,7 @@ public class TestListener implements ITestListener {
     }
 
     public void onFinish(ITestContext context) {
+        log.info("Test Execution Completed Successfully");
        extent.flush();
     }
 }
