@@ -11,7 +11,7 @@ public class LoginPage extends BasePage {
     }
 
   private By txtUsername = By.xpath("//input[@placeholder='Username']");
-  private By txtPassword = By.id("password");
+  private By txtPassword = By.id("passwod");
   private By btnLogin = By.id("login-button");
 
   public HomePage performLogin(String username , String password)

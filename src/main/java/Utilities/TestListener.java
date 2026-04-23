@@ -29,7 +29,16 @@ public class TestListener implements ITestListener {
     }
 
     public void onTestStart(ITestResult result) {
-        test = extent.createTest(result.getMethod().getMethodName(), "Test Started");
+        if(result.wasRetried()){
+            extent.removeTest(test);
+        }
+         Object[] params = result.getParameters();
+         String paramName = "";
+         if(params.length>0)
+         {
+             paramName = "-[" + params[0].toString() + "]";
+         }
+        test = extent.createTest(result.getMethod().getMethodName() +paramName , "Test Started");
     }
 
     public void onTestSuccess(ITestResult result) {
@@ -37,6 +46,13 @@ public class TestListener implements ITestListener {
     }
 
     public void onTestFailure(ITestResult result) {
+        if(result.getMethod().getRetryAnalyzer(result)!=null)
+        {
+            RetryAnalyzer retryAnalyzer = (RetryAnalyzer)result.getMethod().getRetryAnalyzer(result);
+            if(retryAnalyzer.retry(result)){
+                return;
+            }
+        }
 
         test.log(Status.FAIL,"Test Failed");
         test.fail(result.getThrowable());
@@ -45,7 +61,7 @@ public class TestListener implements ITestListener {
 
         String timestamp = new SimpleDateFormat("yyMMdd_HHmmss").format(new Date());
         String screenShotFileName = result.getName()+ "_" + timestamp + ".png" ;
-        String screenShotFilePath = System.getProperty("user.dir") + "//screenshots//" + screenShotFileName;
+        String screenShotFilePath = System.getProperty("user.dir") + "/screenshots/" + screenShotFileName;
 
         File screenShotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         try {
@@ -55,6 +71,19 @@ public class TestListener implements ITestListener {
         }
         String relativePath = "../screenshots/" + screenShotFileName;
         test.addScreenCaptureFromPath(relativePath , " Failure Screenshot");
+    }
+
+
+    public void onTestSkipped(ITestResult result) {
+       if(result.wasRetried()){
+           return;
+       }
+       String message = "Test : " + result.getMethod().getMethodName() + "was Skipped" ;
+       test.skip(message);
+       if(result.getThrowable() != null){
+           test.skip(result.getThrowable());
+       }
+
     }
 
     public void onFinish(ITestContext context) {

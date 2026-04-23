@@ -4,6 +4,7 @@ import Base.BaseTest;
 import Pages.HomePage;
 import Pages.LoginPage;
 import Utilities.DataProviderUtils;
+import Utilities.RetryAnalyzer;
 import Utilities.TestListener;
 import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.testng.Assert;
@@ -14,7 +15,7 @@ import org.testng.annotations.Test;
 public class LoginTest extends BaseTest {
 
 
-    @Test(dataProvider = "loginData", dataProviderClass = DataProviderUtils.class)
+    @Test(dataProvider = "loginData", dataProviderClass = DataProviderUtils.class , retryAnalyzer = RetryAnalyzer.class)
     public void testValidLogin(String username , String password) {
 
 //        String username = ConfigReader.getProperty("username");
