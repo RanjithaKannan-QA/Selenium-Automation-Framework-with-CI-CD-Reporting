@@ -1,4 +1,4 @@
-# Selenium-Java E2E Test Automation Framework
+# Selenium Automation Framework with CI/CD & Reporting
 
 [![Selenium CI Pipeline](https://github.com/RanjithaKannan-QA/Selenium-Automation-Framework-with-CI-CD-Reporting/actions/workflows/ci.yml/badge.svg)](https://github.com/RanjithaKannan-QA/Selenium-Automation-Framework-with-CI-CD-Reporting/actions/workflows/ci.yml)
 
@@ -53,4 +53,4 @@ A professional, modular automation engine designed for scalability and reliabili
 4. **View Reports:** After execution, navigate to reports/index.html to view the interactive Extent Report.
 
 📬 Contact
-Ranjitha Kannan Senior Quality Assurance Engineer | Toronto, ON https://www.linkedin.com/in/ranjithakannan/
+Ranjitha Kannan - Senior Quality Assurance Engineer | Toronto, ON https://www.linkedin.com/in/ranjithakannan/
