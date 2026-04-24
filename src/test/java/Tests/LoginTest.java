@@ -18,8 +18,7 @@ public class LoginTest extends BaseTest {
     @Test(dataProvider = "loginData", dataProviderClass = DataProviderUtils.class , retryAnalyzer = RetryAnalyzer.class)
     public void testValidLogin(String username , String password) {
 
-//        String username = ConfigReader.getProperty("username");
-//        String password = ConfigReader.getProperty("password");
+
         LoginPage loginPage = new LoginPage(driver, timeout);
         HomePage homePage = loginPage.performLogin(username, password);
         boolean value1 = homePage.isHomePageLoaded();
