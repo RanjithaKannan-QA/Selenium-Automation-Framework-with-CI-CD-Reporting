@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TestListener implements ITestListener {
@@ -22,6 +24,7 @@ public class TestListener implements ITestListener {
     private static  ExtentReports extent = ExtentManager.getExtendReports();
     private static ExtentTest test ;
     private static Logger log = Log.getLogger(TestListener.class);
+    private static Map<String, ExtentTest> testMap = new HashMap<>();
 
     public void onStart(ITestContext context) {
       System.out.println("Test Execution Started Successfully");
@@ -29,7 +32,22 @@ public class TestListener implements ITestListener {
     }
 
     public void onTestStart(ITestResult result) {
-        test = extent.createTest(result.getMethod().getMethodName(), "Test Started");
+
+         Object[] params = result.getParameters();
+         String paramName = "";
+         if(params.length>0)
+         {
+             paramName = "-[" + params[0].toString() + "]";
+         }
+         String testName = result.getMethod().getMethodName() + paramName ;
+
+         if(testMap.containsKey(testName)){
+             test =testMap.get(testName);
+             test.info("Retry Attempt Started...");
+         }else {
+             test = extent.createTest(testName, "Test Started");
+             testMap.put(testName , test);
+         }
     }
 
     public void onTestSuccess(ITestResult result) {
@@ -37,6 +55,9 @@ public class TestListener implements ITestListener {
     }
 
     public void onTestFailure(ITestResult result) {
+        if(result.wasRetried()){
+            return;
+        }
 
         test.log(Status.FAIL,"Test Failed");
         test.fail(result.getThrowable());
@@ -45,7 +66,7 @@ public class TestListener implements ITestListener {
 
         String timestamp = new SimpleDateFormat("yyMMdd_HHmmss").format(new Date());
         String screenShotFileName = result.getName()+ "_" + timestamp + ".png" ;
-        String screenShotFilePath = System.getProperty("user.dir") + "//screenshots//" + screenShotFileName;
+        String screenShotFilePath = System.getProperty("user.dir") + "/screenshots/" + screenShotFileName;
 
         File screenShotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         try {
@@ -55,6 +76,19 @@ public class TestListener implements ITestListener {
         }
         String relativePath = "../screenshots/" + screenShotFileName;
         test.addScreenCaptureFromPath(relativePath , " Failure Screenshot");
+    }
+
+
+    public void onTestSkipped(ITestResult result) {
+       if(result.wasRetried()){
+           return;
+       }
+       String message = "Test : " + result.getMethod().getMethodName() + "was Skipped" ;
+       test.skip(message);
+       if(result.getThrowable() != null){
+           test.skip(result.getThrowable());
+       }
+
     }
 
     public void onFinish(ITestContext context) {
