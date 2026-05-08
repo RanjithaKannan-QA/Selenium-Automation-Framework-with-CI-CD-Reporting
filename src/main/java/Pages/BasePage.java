@@ -1,4 +1,5 @@
 package Pages;
+import Utilities.DriverFactory;
 import Utilities.Log;
 import Utilities.WaitUtils;
 import org.apache.logging.log4j.Logger;
@@ -13,9 +14,9 @@ public class BasePage {
    protected Duration timeout ;
    protected Logger log = Log.getLogger(this.getClass());
 
-    public BasePage(WebDriver driver, Duration timeout){
+    public BasePage( Duration timeout){
 
-        this.driver = driver;
+        this.driver = DriverFactory.getDriver();
         this.timeout = timeout;
     }
 

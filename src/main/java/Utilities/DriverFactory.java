@@ -11,10 +11,10 @@ import java.util.Map;
 
 public class DriverFactory {
 
-   private static WebDriver driver;
+   private static ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
 
     public static WebDriver initializeDriver(String browser) {
-
+            WebDriver driver;
 
         if (browser.equalsIgnoreCase("Chrome"))
         {
@@ -46,11 +46,19 @@ public class DriverFactory {
         } else {
             throw new RuntimeException("Unsupported Browser : " + browser);
         }
-        return driver;
+        tlDriver.set(driver);
+        return getDriver();
     }
 
     public static WebDriver getDriver() {
 
-            return driver;
+            return tlDriver.get();
+    }
+
+    public static void quitDriver(){
+     if(getDriver()!=null){
+         getDriver().quit();
+         tlDriver.remove();
+     }
     }
 }

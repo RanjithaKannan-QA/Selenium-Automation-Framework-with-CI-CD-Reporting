@@ -5,8 +5,8 @@ import java.time.Duration;
 
 public class CheckOutOverviewPage extends BasePage {
 
-    public CheckOutOverviewPage (WebDriver driver, Duration timeout){
-        super(driver, timeout);
+    public CheckOutOverviewPage (Duration timeout){
+        super(timeout);
     }
 
     private By finishbtn = By.id("finish");
@@ -23,7 +23,7 @@ public class CheckOutOverviewPage extends BasePage {
     public CheckOutCompletePage clickFinish(){
         log.info("Clicking on Finish button");
         click(finishbtn);
-        return new  CheckOutCompletePage(driver,timeout);
+        return new  CheckOutCompletePage(timeout);
     }
 
 }

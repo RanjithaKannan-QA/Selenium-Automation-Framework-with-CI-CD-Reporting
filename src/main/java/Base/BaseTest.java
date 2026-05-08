@@ -12,7 +12,7 @@ import java.time.Duration;
 
 public class BaseTest {
 
-   protected WebDriver driver;
+
    protected Duration timeout;
    protected Logger log = Log.getLogger(this.getClass());
 
@@ -20,7 +20,9 @@ public class BaseTest {
     public void setUp()
     {
          String  browserName = ConfigReader.getProperty("browser");
-         driver  = DriverFactory.initializeDriver(browserName);
+         DriverFactory.initializeDriver(browserName);
+         WebDriver driver = DriverFactory.getDriver();
+
          driver.manage().window().maximize();
          timeout = Duration.ofSeconds(Integer.parseInt(ConfigReader.getProperty("timeout")));
          String URL = ConfigReader.getProperty("url");
@@ -31,9 +33,7 @@ public class BaseTest {
    @AfterMethod
     public void tearDown()
     {
-        if (driver!=null) {
-            driver.quit();
-        }
+       DriverFactory.quitDriver();
         log.info("Browser closed successfully");
     }
     }

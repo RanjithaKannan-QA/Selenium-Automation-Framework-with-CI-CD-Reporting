@@ -5,9 +5,9 @@ import java.time.Duration;
 
 public class YourCartPage extends  BasePage {
 
-    public YourCartPage (WebDriver driver, Duration timeout){
+    public YourCartPage (Duration timeout){
 
-        super(driver,timeout);
+        super(timeout);
     }
 
     private By checkoutbtn = By.id("checkout");
@@ -30,7 +30,7 @@ public class YourCartPage extends  BasePage {
      public CheckOutYourInfoPage clickCheckOut(){
         log.info("Clicking on CheckOut button");
         click(checkoutbtn);
-        return new CheckOutYourInfoPage(driver, timeout);
+        return new CheckOutYourInfoPage(timeout);
      }
 
 

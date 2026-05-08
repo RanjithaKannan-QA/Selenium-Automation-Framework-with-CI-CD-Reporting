@@ -12,7 +12,7 @@ public class CheckOutYourInfoPageTest extends BaseTest {
     @Test(dataProvider = "checkoutData" , dataProviderClass = DataProviderUtils.class)
     public void testUpdateInformation(String username, String password ,String firstName, String lastName, String postalCode){
 
-        LoginPage loginPage= new LoginPage(driver,timeout);
+        LoginPage loginPage= new LoginPage(timeout);
         HomePage homePage = loginPage.performLogin(username, password);
         log.info("Verifying HomePage is loaded after login");
         Assert.assertTrue(homePage.isHomePageLoaded(),"Login failed: URL did not contain 'inventory'");

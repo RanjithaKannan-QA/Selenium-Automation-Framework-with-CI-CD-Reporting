@@ -6,9 +6,9 @@ import java.time.Duration;
 
 public class CheckOutYourInfoPage extends BasePage {
 
-    public CheckOutYourInfoPage(WebDriver driver, Duration timeout){
+    public CheckOutYourInfoPage(Duration timeout){
 
-        super(driver , timeout);
+        super(timeout);
 
     }
 
@@ -36,7 +36,7 @@ public class CheckOutYourInfoPage extends BasePage {
     public CheckOutOverviewPage clickContinue(){
        log.info("Clicking Continue button");
        click(continuebtn);
-       return new CheckOutOverviewPage(driver, timeout);
+       return new CheckOutOverviewPage(timeout);
     }
 
 }

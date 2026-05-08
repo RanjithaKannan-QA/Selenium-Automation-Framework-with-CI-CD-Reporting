@@ -1,13 +1,14 @@
 package Pages;
+import Utilities.DriverFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import java.time.Duration;
 
 public class LoginPage extends BasePage {
 
-    public LoginPage(WebDriver driver, Duration timeout)
+    public LoginPage(Duration timeout)
     {
-       super(driver,timeout);
+       super(timeout);
     }
 
   private By txtUsername = By.xpath("//input[@placeholder='Username']");
@@ -20,7 +21,7 @@ public class LoginPage extends BasePage {
            enterText(txtUsername,username);
            enterText(txtPassword , password);
            click(btnLogin);
-           return new HomePage(driver, timeout);
+           return new HomePage(timeout);
       }
 
 }
