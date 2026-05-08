@@ -7,9 +7,9 @@ import java.time.Duration;
 
 public class HomePage extends BasePage {
 
-    public HomePage(WebDriver driver , Duration timeout)
+    public HomePage(Duration timeout)
     {
-     super(driver, timeout) ;
+     super(timeout) ;
     }
 
    private By txtMenu = By.id("react-burger-menu-btn");
@@ -47,7 +47,7 @@ public class HomePage extends BasePage {
   public YourCartPage goToCart(){
       log.info("Navigating to  Cart");
       click(cartIcon);
-      return new YourCartPage(driver,timeout);
+      return new YourCartPage(timeout);
 
   }
 

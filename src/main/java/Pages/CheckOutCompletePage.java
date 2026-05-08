@@ -5,8 +5,8 @@ import java.time.Duration;
 
 public class CheckOutCompletePage extends BasePage{
 
-    public CheckOutCompletePage(WebDriver driver, Duration timeout){
-        super(driver, timeout);
+    public CheckOutCompletePage(Duration timeout){
+        super(timeout);
     }
 
     private By successmessage = By.xpath("//h2[@class='complete-header']");
@@ -35,7 +35,7 @@ public class CheckOutCompletePage extends BasePage{
     public HomePage clickBackHome(){
         log.info("Navigating to HomePage");
         click(backhomebtn);
-        return new HomePage(driver , timeout);
+        return new HomePage(timeout);
 
     }
 

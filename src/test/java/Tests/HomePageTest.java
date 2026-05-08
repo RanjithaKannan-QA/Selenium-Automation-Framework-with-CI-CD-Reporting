@@ -14,7 +14,7 @@ public class HomePageTest extends BaseTest {
 @Test(dataProvider = "loginData", dataProviderClass = DataProviderUtils.class)
     public void testAddProductsToCart(String username, String password)
     {
-        LoginPage loginPage = new LoginPage(driver, timeout);
+        LoginPage loginPage = new LoginPage(timeout);
         HomePage homePage = loginPage.performLogin(username , password);
         Assert.assertTrue(homePage.isHomePageLoaded(), "Login failed: URL did not contain 'inventory'");
 
@@ -25,6 +25,11 @@ public class HomePageTest extends BaseTest {
           String expectedValue = "Your Cart";
         String actualValue  = yourCartPage.getHeaderText();
         Assert.assertEquals(actualValue , expectedValue , "HeaderText mismatch in YourCartPage ");
+
+        System.out.println(
+                "Thread ID: " + Thread.currentThread().getId() +
+                        " | " + Thread.currentThread().getName());
+
 
     }
 

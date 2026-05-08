@@ -15,16 +15,17 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TestListener implements ITestListener {
 
     private static  ExtentReports extent = ExtentManager.getExtendReports();
-    private static ExtentTest test ;
     private static Logger log = Log.getLogger(TestListener.class);
-    private static Map<String, ExtentTest> testMap = new HashMap<>();
+
+    private static Map<String, ExtentTest> testMap = new ConcurrentHashMap<>();
+
+    private static ThreadLocal<ExtentTest> tlExtentTest = new ThreadLocal<>();
 
     public void onStart(ITestContext context) {
       System.out.println("Test Execution Started Successfully");
@@ -33,25 +34,31 @@ public class TestListener implements ITestListener {
 
     public void onTestStart(ITestResult result) {
 
-         Object[] params = result.getParameters();
-         String paramName = "";
-         if(params.length>0)
-         {
-             paramName = "-[" + params[0].toString() + "]";
-         }
-         String testName = result.getMethod().getMethodName() + paramName ;
+        Object[] params = result.getParameters();
+        String paramName = "";
+        if(params.length>0)
+        {
+            paramName = "-[" + params[0].toString() + "]";
+        }
+        String testName = result.getMethod().getMethodName() + paramName +
+                " [Thread-" + Thread.currentThread().getId() + "]";
 
-         if(testMap.containsKey(testName)){
-             test =testMap.get(testName);
-             test.info("Retry Attempt Started...");
-         }else {
-             test = extent.createTest(testName, "Test Started");
-             testMap.put(testName , test);
-         }
+        boolean isRetry = testMap.containsKey(testName);
+
+        ExtentTest currentTest = testMap.computeIfAbsent(testName,
+                name -> extent.createTest(name, "Test Started"));
+
+        if (isRetry || result.wasRetried()) {
+            currentTest.info("Retry Attempt Started...");
+        }
+
+        tlExtentTest.set(currentTest);
     }
 
+
     public void onTestSuccess(ITestResult result) {
-        test.log(Status.PASS,"Test Passed Successfully");
+        tlExtentTest.get().log(Status.PASS,"Test Passed Successfully");
+        log.info("PASSED: " + result.getMethod().getMethodName());
     }
 
     public void onTestFailure(ITestResult result) {
@@ -59,8 +66,8 @@ public class TestListener implements ITestListener {
             return;
         }
 
-        test.log(Status.FAIL,"Test Failed");
-        test.fail(result.getThrowable());
+        tlExtentTest.get().log(Status.FAIL,"Test Failed");
+        tlExtentTest.get().fail(result.getThrowable());
 
         WebDriver driver = DriverFactory.getDriver();
 
@@ -75,7 +82,8 @@ public class TestListener implements ITestListener {
             e.printStackTrace();
         }
         String relativePath = "../screenshots/" + screenShotFileName;
-        test.addScreenCaptureFromPath(relativePath , " Failure Screenshot");
+        tlExtentTest.get().addScreenCaptureFromPath(relativePath , " Failure Screenshot");
+        log.error("FAILED: " + result.getMethod().getMethodName());
     }
 
 
@@ -84,9 +92,9 @@ public class TestListener implements ITestListener {
            return;
        }
        String message = "Test : " + result.getMethod().getMethodName() + "was Skipped" ;
-       test.skip(message);
+       tlExtentTest.get().skip(message);
        if(result.getThrowable() != null){
-           test.skip(result.getThrowable());
+           tlExtentTest.get().skip(result.getThrowable());
        }
 
     }

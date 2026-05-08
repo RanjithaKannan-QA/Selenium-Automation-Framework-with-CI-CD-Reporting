@@ -11,15 +11,15 @@ import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-@Listeners(TestListener.class)
+
 public class LoginTest extends BaseTest {
 
 
-    @Test(dataProvider = "loginData", dataProviderClass = DataProviderUtils.class , retryAnalyzer = RetryAnalyzer.class)
+    @Test(dataProvider = "loginData", dataProviderClass = DataProviderUtils.class )
     public void testValidLogin(String username , String password) {
 
 
-        LoginPage loginPage = new LoginPage(driver, timeout);
+        LoginPage loginPage = new LoginPage(timeout);
         HomePage homePage = loginPage.performLogin(username, password);
         boolean value1 = homePage.isHomePageLoaded();
         Assert.assertTrue(value1, "Login failed: URL did not contain 'inventory'");
@@ -28,6 +28,11 @@ public class LoginTest extends BaseTest {
         String expectedText = "Products";
         String actualText = homePage.getHeaderText();
         Assert.assertEquals(actualText,expectedText, "HeaderText mismatch in HomePage" );
+
+        System.out.println(
+                "Thread ID: " + Thread.currentThread().getId() +
+                        " | " + Thread.currentThread().getName());
+
 
     }
 }
