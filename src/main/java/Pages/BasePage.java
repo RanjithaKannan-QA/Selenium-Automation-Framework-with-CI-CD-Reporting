@@ -23,19 +23,19 @@ public class BasePage {
     public void enterText(By locator, String text)
     {
         log.info("Entering text into the field '{}'" ,locator);
-        WaitUtils.waitForElement(driver, locator , timeout).sendKeys(text);
+        WaitUtils.waitForVisibility(driver, locator , timeout).sendKeys(text);
     }
 
     public void click(By locator)
     {
         log.info("clicking on element '{}'", locator);
-        WaitUtils.waitForElement(driver, locator , timeout ).click();
+        WaitUtils.waitForClickability(driver, locator , timeout ).click();
     }
 
     public boolean isElementDisplayed(By locator){
         try{
             log.info("Checking visibility of element at '{}'", locator );
-            WebElement element =  WaitUtils.waitForElement(driver,locator,timeout);
+            WebElement element =  WaitUtils.waitForVisibility(driver,locator,timeout);
             boolean result = element.isDisplayed();
             log.info("Element '{}' displayed status: '{}'", locator , result );
             return result;
@@ -49,8 +49,8 @@ public class BasePage {
 
     public boolean isUrlContains(String value)
     {
+        boolean result = WaitUtils.waitForUrlContains(driver, value, timeout);
         String currentUrl = driver.getCurrentUrl();
-        boolean result = currentUrl.contains(value);
         log.info("The currentUrl : {}", currentUrl );
         log.info("Validating if url contains '{}' :  {}", value ,result );
         return result;
@@ -60,7 +60,7 @@ public class BasePage {
     public String getText(By locator)
     {
        log.info("Fetching text from element '{}'", locator );
-        WebElement element =WaitUtils.waitForElement(driver, locator, timeout);
+        WebElement element =WaitUtils.waitForVisibility(driver, locator, timeout);
         String  elementText = element.getText().trim();
         log.info("the element text is : '{}'" ,elementText);
         return elementText;

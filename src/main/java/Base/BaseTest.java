@@ -7,6 +7,8 @@ import org.apache.logging.log4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.AfterMethod;
 import org.openqa.selenium.WebDriver;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 
 import java.time.Duration;
 
@@ -16,10 +18,11 @@ public class BaseTest {
    protected Duration timeout;
    protected Logger log = Log.getLogger(this.getClass());
 
+  @Parameters("browserName")
   @BeforeMethod
-    public void setUp()
+    public void setUp(@Optional("Chrome") String browserName)
     {
-         String  browserName = ConfigReader.getProperty("browser");
+
          DriverFactory.initializeDriver(browserName);
          WebDriver driver = DriverFactory.getDriver();
 
@@ -28,6 +31,8 @@ public class BaseTest {
          String URL = ConfigReader.getProperty("url");
          driver.get(URL);
          log.info("Launched browser '{}' and navigated to url {}" , browserName, URL);
+         log.info("Thread ID : " + Thread.currentThread().getId()
+                + " Browser : " + browserName);
     }
 
    @AfterMethod

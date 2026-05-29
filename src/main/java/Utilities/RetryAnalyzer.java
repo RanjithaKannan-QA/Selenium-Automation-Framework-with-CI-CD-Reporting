@@ -10,14 +10,13 @@ public class RetryAnalyzer implements IRetryAnalyzer {
 
     public boolean retry(ITestResult result) {
 
-        if (!result.isSuccess()) {
-            if (count < retryLimit) {
-                count++;
-                return true;
-            }
+        if (count < retryLimit) {
+            count++;
+            return true;
         }
-                return false;
-            }
-        }
+        result.setAttribute("isFinalAttempt", true);
+        return false;
+    }
+}
 
 

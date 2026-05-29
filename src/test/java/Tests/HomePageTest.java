@@ -14,6 +14,7 @@ public class HomePageTest extends BaseTest {
 @Test(dataProvider = "loginData", dataProviderClass = DataProviderUtils.class)
     public void testAddProductsToCart(String username, String password)
     {
+
         LoginPage loginPage = new LoginPage(timeout);
         HomePage homePage = loginPage.performLogin(username , password);
         Assert.assertTrue(homePage.isHomePageLoaded(), "Login failed: URL did not contain 'inventory'");
