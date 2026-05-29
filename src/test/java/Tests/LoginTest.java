@@ -19,6 +19,12 @@ public class LoginTest extends BaseTest {
     public void testValidLogin(String username , String password) {
 
 
+        Assert.assertNotNull(username, "Username is null");
+        Assert.assertFalse(username.trim().isEmpty(), "Username is blank");
+
+        Assert.assertNotNull(password, "Password is null");
+        Assert.assertFalse(password.trim().isEmpty(), "Password is blank");
+
         LoginPage loginPage = new LoginPage(timeout);
         HomePage homePage = loginPage.performLogin(username, password);
         boolean value1 = homePage.isHomePageLoaded();

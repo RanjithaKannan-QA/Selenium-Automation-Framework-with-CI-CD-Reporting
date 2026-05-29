@@ -12,8 +12,8 @@ public class HomePage extends BasePage {
      super(timeout) ;
     }
 
-   private By txtMenu = By.id("react-burger-menu-btn");
-   private By txtproduct = By.xpath("//span[@class = 'title']");
+   private By menuButton = By.id("react-burger-menu-btn");
+   private By productTitle = By.xpath("//span[@class = 'title']");
    private By addonesiebtn =  By.id("add-to-cart-sauce-labs-onesie");
    private By addtshirtbtn = By.id("add-to-cart-sauce-labs-bolt-t-shirt");
    private By addbagbtn = By.id("add-to-cart-sauce-labs-backpack");
@@ -21,14 +21,14 @@ public class HomePage extends BasePage {
 
   public boolean isMenuDisplayed()
   {
-    return isElementDisplayed(txtMenu);
+    return isElementDisplayed(menuButton);
   }
 
   public boolean isHomePageLoaded(){
       return  isUrlContains("inventory");
   }
   public String getHeaderText(){
-     return getText(txtproduct);
+     return getText(productTitle);
   }
 
 //    public void verifyPageLoad(){

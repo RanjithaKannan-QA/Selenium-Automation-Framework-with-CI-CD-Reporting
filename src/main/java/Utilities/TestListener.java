@@ -40,21 +40,20 @@ public class TestListener implements ITestListener {
         {
             paramName = "-[" + params[0].toString() + "]";
         }
-        String testName = result.getMethod().getMethodName() + paramName +
-                " [Thread-" + Thread.currentThread().getId() + "]";
+        String testName = result.getTestClass().getRealClass().getSimpleName() + "." + result.getMethod().getMethodName()
+                + paramName ;
 
-        boolean isRetry = testMap.containsKey(testName);
+        ExtentTest currentTest = testMap.computeIfAbsent(testName, name -> {
+            ExtentTest newTest = extent.createTest(name, "Test Started");
+            newTest.info("Execution started on Thread: " + Thread.currentThread().getId());
+            return newTest;});
 
-        ExtentTest currentTest = testMap.computeIfAbsent(testName,
-                name -> extent.createTest(name, "Test Started"));
-
-        if (isRetry || result.wasRetried()) {
-            currentTest.info("Retry Attempt Started...");
+        if (result.getMethod().getCurrentInvocationCount() > 0) {
+            currentTest.info("This is a Retry Attempt...");
         }
 
         tlExtentTest.set(currentTest);
     }
-
 
     public void onTestSuccess(ITestResult result) {
         tlExtentTest.get().log(Status.PASS,"Test Passed Successfully");
@@ -62,7 +61,8 @@ public class TestListener implements ITestListener {
     }
 
     public void onTestFailure(ITestResult result) {
-        if(result.wasRetried()){
+        Boolean isFinalAttempt = (Boolean) result.getAttribute("isFinalAttempt");
+        if (result.getMethod().getRetryAnalyzer(result) != null && isFinalAttempt == null) {
             return;
         }
 
@@ -88,10 +88,13 @@ public class TestListener implements ITestListener {
 
 
     public void onTestSkipped(ITestResult result) {
-       if(result.wasRetried()){
-           return;
-       }
-       String message = "Test : " + result.getMethod().getMethodName() + "was Skipped" ;
+
+        Boolean isFinalAttempt = (Boolean) result.getAttribute("isFinalAttempt");
+        if (result.getMethod().getRetryAnalyzer(result) != null && isFinalAttempt == null && result.getThrowable() == null){
+            return;
+        }
+
+       String message = "Test : " + result.getMethod().getMethodName() + " was Skipped" ;
        tlExtentTest.get().skip(message);
        if(result.getThrowable() != null){
            tlExtentTest.get().skip(result.getThrowable());
